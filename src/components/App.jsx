@@ -20,19 +20,20 @@ export class App extends Component {
   };
 
   componentDidMount() {
-    const localContacts = JSON.parse(localStorage.getItem('contacts'));
-    // console.log(localContacts);
-    if (localContacts) {
-      this.setState({ contacts: localContacts });
+    const contacts = localStorage.getItem('contacts');
+    const parsedСontacts = JSON.parse(contacts);
+
+    if (parsedСontacts) {
+      this.setState({ contacts: parsedСontacts });
     }
   }
 
   componentDidUpdate(prevProps, prevState) {
+    const nextContacts = this.state.contacts;
     const prevContacts = prevState.contacts;
-    const contacts = this.state.contacts;
 
-    if (prevContacts !== contacts) {
-      localStorage.setItem('contacts', JSON.stringify(contacts));
+    if (nextContacts !== prevContacts) {
+      localStorage.setItem('contacts', JSON.stringify(nextContacts));
     }
   }
 
@@ -48,16 +49,24 @@ export class App extends Component {
     return contacts;
   }
 
-  addContact = (name, number) => {
-    this.setState(prev => ({
-      contacts: [
-        ...prev.contacts,
-        {
-          name,
-          number,
-          id: nanoid(),
-        },
-      ],
+  addContact = ({ name, number }) => {
+    const normalizedFind = name.toLowerCase();
+    const findName = this.state.contacts.find(
+      contact => contact.name.toLowerCase() === normalizedFind
+    );
+    if (findName) {
+      return alert(`${name} is already in contacts.`);
+    }
+
+    const findNumber = this.state.contacts.find(
+      contact => contact.number === number
+    );
+    if (findNumber) {
+      return alert(`This phone number is already in use.`);
+    }
+
+    this.setState(({ contacts }) => ({
+      contacts: [{ name, number, id: nanoid() }, ...contacts],
     }));
   };
 
@@ -76,7 +85,7 @@ export class App extends Component {
     return (
       <>
         <Section title={'Phonebook'}>
-          <FormNewContact contacts={contacts} addContact={this.addContact} />
+          <FormNewContact onSubmit={this.addContact} />
         </Section>
         <Section title={'Contacts'}>
           {contacts.length ? (

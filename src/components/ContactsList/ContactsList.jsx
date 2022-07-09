@@ -1,17 +1,7 @@
 import ContactsItem from '../ContactsItem/ContactsItem';
+import PropTypes from 'prop-types';
+
 const ContactsList = ({ contacts, removeContact }) => {
-  // let filteredContacts = [];
-  // if (!searchValue) {
-  //   //do nothing
-  //   filteredContacts = [...contacts];
-  // } else {
-  //   //filter with searchValue
-  //   filteredContacts = [
-  //     ...contacts.filter(contact =>
-  //       contact.name.toLowerCase().includes(searchValue.toLowerCase())
-  //     ),
-  //   ];
-  // }
 
   return (
     <ul>
@@ -28,6 +18,17 @@ const ContactsList = ({ contacts, removeContact }) => {
       })}
     </ul>
   );
+};
+
+ContactsList.propTypes = {
+  contacts: PropTypes.arrayOf(
+    PropTypes.shape({
+      id: PropTypes.string.isRequired,
+      name: PropTypes.string.isRequired,
+      number: PropTypes.string.isRequired,
+    })
+  ),
+  removeContact: PropTypes.func.isRequired,
 };
 
 export default ContactsList;

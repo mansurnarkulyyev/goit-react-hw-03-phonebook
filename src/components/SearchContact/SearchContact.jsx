@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 const SearchContact = ({ searchValue, handleChange }) => {
   return (
     <div className="searchWrap">
@@ -13,6 +14,11 @@ const SearchContact = ({ searchValue, handleChange }) => {
       </label>
     </div>
   );
+};
+
+SearchContact.propTypes = {
+  searchValue: PropTypes.string.isRequired,
+  handleChange: PropTypes.func.isRequired,
 };
 
 export default SearchContact;

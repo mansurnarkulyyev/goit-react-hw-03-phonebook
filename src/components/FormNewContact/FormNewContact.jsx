@@ -1,39 +1,29 @@
 import { Component } from 'react';
+import PropTypes from 'prop-types';
 
 export class FormNewContact extends Component {
-  state = { name: '', number: '' };
+
+  state = {
+    name: '',
+    number: '',
+  };
 
   handleChange = e => {
-    this.setState({ [e.target.name]: e.target.value });
+    const { name, value } = e.currentTarget;
+    this.setState({ [name]: value });
   };
-
-  resetForm() {
-    this.setState({ name: '', number: '' });
-  }
-
-  hasName(name) {
-    const contacts = this.props.contacts;
-    if (
-      contacts.some(
-        contact => contact.name.toLowerCase() === name.toLowerCase()
-      )
-    ) {
-      alert('This contact name already exists!');
-      return true;
-    }
-    return false;
-  }
 
   handleSubmit = e => {
-    const name = e.target.name.value;
-    const number = e.target.number.value;
     e.preventDefault();
-    //check if name alrady exists
-    if (this.hasName(name)) return;
-    //use App method as prop
-    this.props.addContact(name, number);
-    this.resetForm();
+    this.props.onSubmit(this.state);
+    this.reset();
   };
+
+  reset = () => {
+    this.setState({ name: '', number: '' });
+  };
+
+
 
   render() {
     const { name, number } = this.state;
@@ -68,6 +58,10 @@ export class FormNewContact extends Component {
       </form>
     );
   }
+}
+
+FormNewContact.propTypes = {
+  onSubmit: PropTypes.func.isRequired,
 }
 
 export default FormNewContact;
